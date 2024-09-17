@@ -1,0 +1,31 @@
+.input {
+  @apply
+    block relative
+    pb-5;
+
+  input {
+    @apply
+      bg-main-transparent
+      outline-none
+      w-full
+      text-sm leading-6 text-main-black placeholder:text-neutral-dark-80
+      px-3 py-1.5
+      bg-neutral-light-20
+      flex items-center
+      rounded-md border border-main-transparent;
+
+    &.error {
+      border: 1px solid #F87171;
+    }
+  }
+
+  span.error {
+    color: #F87171;
+
+    @apply
+      absolute bottom-0 left-0
+      pt-1
+      text-xs
+      w-full;
+  }
+}

@@ -1,0 +1,10 @@
+.login-container {
+  @apply
+    max-w-96
+    mt-5 ml-auto mr-auto;
+
+  .input {
+    @apply
+      mb-1;
+  }
+}
