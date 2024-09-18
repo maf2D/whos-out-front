@@ -27,8 +27,6 @@
 </template>
 
 <script setup lang="ts">
-  import type { ApiUserResponse } from '@/types/api.ts';
-
   import * as yup from 'yup';
   import { useRouter } from 'vue-router';
   import { useForm } from 'vee-validate';
