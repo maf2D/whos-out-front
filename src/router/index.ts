@@ -1,10 +1,14 @@
 import type { ApiUserResponse } from '@/types/api.ts';
 
 import { useFetch } from '@vueuse/core';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, RouteLocationNormalized } from 'vue-router';
 import { useState } from '@/composables/use-state.ts';
 
 const routes = [
+  {
+    path: '/',
+    redirect: '/widget',
+  },
   {
     path: '/login',
     name: 'login',
@@ -34,7 +38,7 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach(async (to) => {
+router.beforeEach(async (to: RouteLocationNormalized) => {
   const { loggedInUser } = useState();
 
   // protected pages check
