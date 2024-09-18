@@ -1,6 +1,6 @@
 import type { ApiUserResponse } from '@/types/api.ts';
 
-import { useFetch } from '@vueuse/core';
+import { useApi } from '@/composables/use-api';
 import { createRouter, createWebHistory, RouteLocationNormalized } from 'vue-router';
 import { useState } from '@/composables/use-state.ts';
 
@@ -40,6 +40,7 @@ const router = createRouter({
 
 router.beforeEach(async (to: RouteLocationNormalized) => {
   const { loggedInUser } = useState();
+  const { api } = useApi();
 
   // protected pages check
   if (to.meta.protected && !loggedInUser.value) {
@@ -50,7 +51,7 @@ router.beforeEach(async (to: RouteLocationNormalized) => {
   if (to.meta.restrictToAdmin && loggedInUser.value) {
 
     // check if an admin
-    const { response } = await useFetch(`/api/v1/users/${loggedInUser.value._id}`);
+    const { response } = await api(`/users/${loggedInUser.value._id}`);
     const { data }: ApiUserResponse = await response.value?.json();
 
     // if not then redirect to the login page

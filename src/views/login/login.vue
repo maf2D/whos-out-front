@@ -27,16 +27,17 @@
 </template>
 
 <script setup lang="ts">
+  import type { ApiUserResponse } from '@/types/api.ts';
+
   import * as yup from 'yup';
   import { useRouter } from 'vue-router';
   import { useForm } from 'vee-validate';
+  import { useApi } from '@/composables/use-api';
   import { useState } from '@/composables/use-state.ts';
 
   import WidgetContainer from '@/lib/widget-container/widget-container.vue';
   import Input from '@/lib/input/input.vue';
   import Button from '@/lib/button/button.vue';
-  import { useFetch } from '@vueuse/core';
-  import { ApiUserResponse } from '@/types/api.ts';
 
   type LoginForm = {
     email: string;
@@ -45,6 +46,7 @@
 
   const router = useRouter();
   const { loggedInUser } = useState();
+  const { api } = useApi();
   const { errors, defineField, handleSubmit } = useForm<LoginForm>({
 
     // default initial values
@@ -68,7 +70,7 @@
     const {
       onFetchResponse,
       onFetchError
-    } = useFetch<ApiUserResponse>('/api/v1/auth/sign-in').post(values);
+    } = api('/auth/sign-in').post(values);
 
     // if an invalid user then show errors
     onFetchError((error: Error) => {

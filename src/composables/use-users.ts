@@ -4,7 +4,7 @@ import type { WidgetState }
   from '@/components/whos-out-widget/whos-out-widget.vue';
 
 import { computed, ref } from 'vue';
-import { useFetch } from '@vueuse/core';
+import { useApi } from '@/composables/use-api';
 import { buildQueryParams } from '@/helpers/build-query-params';
 
 // composable that gets some params and returns users based on the params
@@ -19,16 +19,19 @@ export const useUsers = ({
   const allFetched = ref(false);
   const users = ref<ApiUsersResponse['data'] | null>(null);
 
+  // base api
+  const { api } = useApi();
+
   // composable that fetches new users based on query params
   const {
     isFetching,
     error,
     onFetchResponse,
     execute
-  } = useFetch<ApiUsersResponse>(
+  } = api<ApiUsersResponse>(
 
     // dynamic url
-    computed(() => `/api/v1/users?${buildQueryParams({
+    computed(() => `/users?${buildQueryParams({
       searchStr: searchStr.value,
       skip: skip.value,
       limit: limit.value,
