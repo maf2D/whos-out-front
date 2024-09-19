@@ -23,12 +23,6 @@ export default defineConfig({
     port: 3000,
     watch: {
       usePolling: true
-    },
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:3001', // Backend server URL
-    //     changeOrigin: true
-    //   }
-    // }
+    }
   }
 });

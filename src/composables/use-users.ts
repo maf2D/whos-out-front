@@ -41,7 +41,7 @@ export const useUsers = ({
     })}`),
 
     // additional settings
-    { credentials: 'include' }
+    { immediate: false }
   );
 
   // set up users

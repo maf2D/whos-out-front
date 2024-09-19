@@ -51,7 +51,7 @@ router.beforeEach(async (to: RouteLocationNormalized) => {
   if (to.meta.restrictToAdmin && loggedInUser.value) {
 
     // check if an admin
-    const { response } = await api(`/users/${loggedInUser.value._id}`, { credentials: 'include' });
+    const { response } = await api(`/users/${loggedInUser.value._id}`);
     const { data }: ApiUserResponse = await response.value?.json();
 
     // if not then redirect to the login page

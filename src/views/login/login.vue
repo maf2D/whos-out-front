@@ -68,7 +68,7 @@
     const {
       onFetchResponse,
       onFetchError
-    } = api('/auth/sign-in', { credentials: 'include' }).post(values);
+    } = api('/auth/sign-in').post(values);
 
     // if an invalid user then show errors
     onFetchError((error: Error) => {

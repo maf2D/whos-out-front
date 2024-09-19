@@ -2,7 +2,12 @@ import { createFetch } from '@vueuse/core';
 
 export const useApi = () => {
   const api = createFetch({
-    baseUrl: 'https://whos-out-api.maf2d.com/api/v1'
+    baseUrl: import.meta.env.VITE_API_URL,
+    options: {
+      async beforeFetch({ options }) {
+        options.credentials = 'include';
+      }
+    }
   });
 
   return { api };
