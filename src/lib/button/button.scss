@@ -1,0 +1,9 @@
+.button {
+  @apply
+    p-2
+    w-full
+    text-sm
+    rounded-md
+    flex justify-center items-center
+    bg-neutral-light-40;
+}
