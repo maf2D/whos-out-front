@@ -26,7 +26,8 @@ export const useUsers = ({
     computed(
       () =>
         `/users?${buildQueryParams({
-          firstName: searchStr.value,
+          search: searchStr.value,
+          searchBy: '[firstName, lastName]',
           skip: skip.value,
           limit: limit.value,
           ...(activeTab.value === 'On Vacation' && { onVacation: true })
