@@ -1,47 +1,39 @@
 <template>
-  <div class='users-list'>
-    <div
-      v-if='users.length'
-      class='virtual-list'
-      v-bind='containerProps'
-    >
-      <div v-bind='wrapperProps'>
+  <div class="users-list">
+    <div v-if="users.length" class="virtual-list" v-bind="containerProps">
+      <div v-bind="wrapperProps">
         <users-list-item
-          v-for='item of list'
-          :img='defaultAvatar'
-          :title='`${item.data.firstName} ${item.data.lastName}`'
-          subtitle='some'
+          v-for="item of list"
+          :img="defaultAvatar"
+          :title="`${item.data.firstName} ${item.data.lastName}`"
+          subtitle="some"
           :onVacation="item.data.onVacation"
-          :key='item.data.id'
+          :key="item.data.id"
+          @click="$emit('user-click', item.data.id)"
         />
 
-        <div ref='lastItemRef' />
+        <div ref="lastItemRef" />
       </div>
     </div>
 
-    <loader v-if='loading' />
+    <loader v-if="loading" />
 
-    <p
-      v-if='!list.length && !loading'
-      class='error'
-    >
-      No users found
-    </p>
+    <p v-if="!list.length && !loading" class="error">No users found</p>
   </div>
 </template>
 
-<script lang='ts' setup>
-  import type { User } from '@/types/api';
+<script lang="ts" setup>
+import type { User } from '@/types/api';
 
-  import { computed, onUnmounted, ref } from 'vue';
-  import { useIntersectionObserver, useVirtualList } from '@vueuse/core';
+import { computed, onUnmounted, ref } from 'vue';
+import { useIntersectionObserver, useVirtualList } from '@vueuse/core';
 
-  import UsersListItem from '@/lib/users-list-item/users-list-item.vue';
-  import Loader from '@/lib/loader/loader.vue';
-  import defaultAvatar from '@/assets/user-stub.png';
+import UsersListItem from '@/lib/users-list-item/users-list-item.vue';
+import Loader from '@/lib/loader/loader.vue';
+import defaultAvatar from '@/assets/user-stub.png';
 
-  const props = withDefaults(defineProps<{
-
+const props = withDefaults(
+  defineProps<{
     // all the users
     users: User[];
 
@@ -50,50 +42,54 @@
 
     // error
     error: string | null;
-  }>(), {
-
+  }>(),
+  {
     // default values
     users: () => [] as User[],
     loading: false,
     error: null
-  });
+  }
+);
 
-  // last user in the list
-  const lastItemRef = ref<HTMLElement | null>(null);
-  const isLastItemIntersected = ref(false);
+defineEmits<{
+  (event: 'user-click', userId: number): void;
+}>();
 
-  // composable that shows only n list items in the view port
-  const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(
-    computed(() => props.users),
-    { itemHeight: 44 }
-  );
+// last user in the list
+const lastItemRef = ref<HTMLElement | null>(null);
+const isLastItemIntersected = ref(false);
 
-  // update isLastItemIntersected when intersecting last item
-  const { stop } = useIntersectionObserver(
+// composable that shows only n list items in the view port
+const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(
+  computed(() => props.users),
+  { itemHeight: 44 }
+);
 
-    // target
-    lastItemRef,
+// update isLastItemIntersected when intersecting last item
+const { stop } = useIntersectionObserver(
+  // target
+  lastItemRef,
 
-    // intersection cb
-    ([{ isIntersecting }]) => {
-      if (isIntersecting) {
-        isLastItemIntersected.value = true;
-      }
+  // intersection cb
+  ([{ isIntersecting }]) => {
+    if (isIntersecting) {
+      isLastItemIntersected.value = true;
     }
-  );
+  }
+);
 
-  // disable observer when unmounted
-  onUnmounted(() => stop());
+// disable observer when unmounted
+onUnmounted(() => stop());
 
-  defineExpose({
-    isLastItemIntersected,
+defineExpose({
+  isLastItemIntersected,
 
-    resetIsLastItemIntersected: () => isLastItemIntersected.value = false,
-    scrollToTop: () => scrollTo(0)
-  });
+  resetIsLastItemIntersected: () => (isLastItemIntersected.value = false),
+  scrollToTop: () => scrollTo(0)
+});
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .users-list {
   display: flex;
   flex-direction: column;
@@ -131,5 +127,4 @@
     height: 100%;
   }
 }
-
 </style>

@@ -6,9 +6,10 @@
 
 <style lang="scss" scoped>
 .loader-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
+  opacity: 0.15;
 }
 
 .loader {
@@ -24,6 +25,7 @@
   mask-composite: subtract;
   animation: l3 1s infinite linear;
 }
+
 @keyframes l3 {
   to {
     transform: rotate(1turn);

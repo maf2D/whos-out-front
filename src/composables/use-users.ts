@@ -2,9 +2,9 @@ import type { ApiUsersResponse } from '@/types/api';
 import type { ToRefs } from 'vue';
 import type { WidgetState } from '../components/whos-out-widget/users-page/users-page.vue';
 
+import { computed, ref } from 'vue';
 import { useApi } from '@/composables/use-api';
 import { buildQueryParams } from '@/helpers/build-query-params';
-import { computed, ref } from 'vue';
 
 // composable that gets some params and returns users based on the params
 export const useUsers = ({
@@ -13,12 +13,10 @@ export const useUsers = ({
   searchStr,
   activeTab
 }: ToRefs<WidgetState>) => {
-  // users state
   const allFetched = ref(false);
   const users = ref<ApiUsersResponse['data'] | null>(null);
 
-  // base api
-  const { api } = useApi();
+  const api = useApi();
 
   // composable that fetches new users based on query params
   const { isFetching, error, onFetchResponse, execute } = api<ApiUsersResponse>(

@@ -56,6 +56,12 @@
   flex-direction: row;
   justify-content: space-between;
   height: 44px;
+  cursor: pointer;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: #f1f5f8;
+  }
 }
 
 .item-left {

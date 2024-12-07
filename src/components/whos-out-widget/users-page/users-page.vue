@@ -14,6 +14,7 @@
     :users="users?.users || []"
     :loading="isFetching"
     :error="error"
+    @user-click="(id: number) => activePageUpdate({ name: Pages.USER, id })"
     @set-skip="(skip: number) => widgetState.skip = skip"
     ref="usersListRef"
   />
@@ -23,6 +24,7 @@
 import type { Tab } from '@/lib/tabs-list/tabs-list.vue';
 
 import { computed, reactive, ref, toRefs, watch } from 'vue';
+import { Pages, useStore } from '@/store';
 import { useUsers } from '@/composables/use-users';
 
 import Search from '@/lib/search/search.vue';
@@ -47,6 +49,8 @@ const widgetState = reactive<WidgetState>({
 const usersListRef = ref<InstanceType<typeof UsersList> | null>(null);
 const searchRef = ref<InstanceType<typeof Search> | null>(null);
 
+const { activePageUpdate } = useStore();
+
 // up-to-date users
 const { users, allFetched, isFetching, error, fetchUsers } = useUsers(
   toRefs(widgetState)
@@ -59,9 +63,9 @@ const tabs = computed<Tab[]>(() => [
   // { label: 'On Holidays', badge: users.value?.usersOnHolidays }
 ]);
 
-// watcher that resets widget when tab or search was changed
+// watcher that resets the widget when tab or search was changed
 watch([() => widgetState.searchStr, () => widgetState.activeTab], () => {
-  // update widget
+  // update the widget
   usersListRef.value && usersListRef.value.scrollToTop();
   searchRef.value && searchRef.value.focusSearch();
 
@@ -72,7 +76,7 @@ watch([() => widgetState.searchStr, () => widgetState.activeTab], () => {
   fetchUsers();
 });
 
-// watcher that updates skip variable when intersecting last item
+// watcher that updates the skip variable when intersecting last item
 watch(
   () => usersListRef.value?.isLastItemIntersected,
   () => {

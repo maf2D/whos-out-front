@@ -1,5 +1,5 @@
 <template>
-  <whos-out-widget/>
+  <whos-out-widget />
 </template>
 
 <script setup lang="ts">

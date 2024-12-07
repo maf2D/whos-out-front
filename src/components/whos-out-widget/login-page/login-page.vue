@@ -1,6 +1,6 @@
 <template>
-  <form @submit="onSubmit" class="login-container">
-    <Input
+  <form @submit="submitHandler" class="login-container">
+    <custom-input
       v-model="email"
       v-bind="emailProps"
       name="email"
@@ -10,48 +10,43 @@
       :error="errors.email || ''"
     />
 
-    <Input
+    <custom-input
       v-model="password"
       v-bind="passwordProps"
-      name="passwo:w3rd"
+      name="password"
       type="password"
       placeholder="Please enter your password"
       :class="{ error: errors.password }"
       :error="errors.password || ''"
     />
 
-    <Button type="submit">Login</Button>
+    <custom-button type="submit">Login</custom-button>
   </form>
 </template>
 
 <script setup lang="ts">
-import type { User } from '@/types/api';
-
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
+import { Pages, useStore } from '@/store';
 import { useApi } from '@/composables/use-api';
 
-import Input from '@/lib/input/input.vue';
-import Button from '@/lib/button/button.vue';
+import CustomInput from '@/lib/input/input.vue';
+import CustomButton from '@/lib/button/button.vue';
 
 type LoginForm = {
   email: string;
   password: string;
 };
 
-const emit = defineEmits<{
-  (event: 'on-logged-in-user-update', user: User): void;
-}>();
+const api = useApi();
+const { activePageUpdate, userUpdate } = useStore();
 
-const { api } = useApi();
 const { errors, defineField, handleSubmit } = useForm<LoginForm>({
-  // default initial values
   initialValues: {
     email: 'test@gmail.com',
     password: 'test1234@M'
   },
 
-  // schema
   validationSchema: yup.object({
     email: yup.string().email().required(),
     password: yup.string().min(8).required()
@@ -60,22 +55,20 @@ const { errors, defineField, handleSubmit } = useForm<LoginForm>({
 
 const [email, emailProps] = defineField('email');
 const [password, passwordProps] = defineField('password');
-// login a user on a success validation
-const onSubmit = handleSubmit(async (values, actions) => {
-  const { onFetchResponse, onFetchError } = api('/auth/sign-in').post(values);
 
-  // if an invalid user then show errors
-  onFetchError((error: Error) => {
-    actions.setFieldError('email', error.message);
-    actions.setFieldError('password', error.message);
-  });
+const submitHandler = handleSubmit(async (values, actions) => {
+  const { data, error } = await api('/auth/sign-in').post(values).json();
+  const errorMsg = 'email or password is not correct';
 
-  // if success then save a user
-  onFetchResponse(async (response) => {
-    const { data } = await response.json();
+  if (error.value) {
+    actions.setFieldError('email', errorMsg);
+    actions.setFieldError('password', errorMsg);
+  }
 
-    emit('on-logged-in-user-update', data.user);
-  });
+  if (data.value) {
+    userUpdate(data.value.data.user);
+    activePageUpdate({ name: Pages.USERS });
+  }
 });
 </script>
 

@@ -10,6 +10,7 @@
   width: 100%;
   font-size: 14px;
   border-radius: 6px;
+  border: none;
 
   display: flex;
   justify-content: center;

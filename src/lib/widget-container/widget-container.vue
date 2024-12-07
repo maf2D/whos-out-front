@@ -1,51 +1,52 @@
 <template>
-  <div class='widget-container'>
-    <div class='header'>
-      <div class='logo-container'>
-        <div class='logo'>
+  <div class="widget-container">
+    <div class="header">
+      <div class="logo-container">
+        <div class="logo">
           <icon-logo />
         </div>
 
-        <h1>{{ text }}</h1>
+        <h1>{{ title }}</h1>
       </div>
 
-      <!-- <x
-        class='close-btn'
-        @click="$emit('close')"
-      /> -->
+      <ul class="right-menu">
+        <li v-for="{ cb, name } of menu" @click="cb" :key="name">
+          {{ name }}
+        </li>
+      </ul>
     </div>
 
-    <div class='slot'>
+    <div class="slot">
       <slot />
     </div>
   </div>
 </template>
 
-<script lang='ts' setup>
-  // import X from '@/lib/icons/x/x.vue';
-  import IconLogo from '@/lib/icons/logo/logo.vue';
+<script lang="ts" setup>
+import IconLogo from '@/lib/icons/logo/logo.vue';
 
-  withDefaults(defineProps<{
+export type MenuItem = {
+  name: string;
+  cb: () => void;
+};
 
-    // widget text
-    text: string;
-  }>(), {
-
-    // default values
-    text: ''
-  });
-
-  defineEmits<{
-    (event: 'close'): void;
-  }>();
+withDefaults(
+  defineProps<{
+    title: string;
+    menu: MenuItem[];
+  }>(),
+  {
+    title: ''
+  }
+);
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .widget-container {
   max-width: 906px;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid #D3DFEB;
+  border: 1px solid #d3dfeb;
   border-radius: 6px;
 
   .header {
@@ -56,7 +57,7 @@
     padding-right: 16px;
     padding-top: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #D3DFEB;
+    border-bottom: 1px solid #d3dfeb;
   }
 
   .logo-container {
@@ -76,8 +77,23 @@
     }
   }
 
-  .close-btn {
-    cursor: pointer;
+  .right-menu {
+    list-style: none;
+
+    display: flex;
+    align-items: center;
+
+    li {
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-left: 20px;
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 
   .slot {
@@ -86,7 +102,8 @@
     padding-right: 16px;
     padding-top: 12px;
     padding-bottom: 12px;
+
+    position: relative;
   }
 }
-
 </style>
