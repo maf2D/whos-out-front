@@ -17,18 +17,20 @@
 import type { ApiUserResponse } from '@/types/api';
 
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useStore } from '@/store';
 import { useApi } from '@/composables/use-api';
 
 import Loader from '@/lib/loader/loader.vue';
-import UserInfo from './user-page-user-info.vue';
-import AddVacationForm from './user-page-add-vacation-form.vue';
+import UserInfo from '@/components/user-user-info.vue';
+import AddVacationForm from '@/components/user-add-vacation-form.vue';
 
 const api = useApi();
-const { activePage, user } = useStore();
+const route = useRoute();
+const { user } = useStore();
 
 // if its a current logged in user
-const me = computed(() => activePage.id === user.value?.id);
+const me = computed(() => +route.params.id === user.value?.id);
 
 // fetch a user when a prop is changed
 const {
@@ -36,7 +38,7 @@ const {
   execute: fetchUserWithVacations,
   data: fetchedUser
 } = api<ApiUserResponse>(
-  computed(() => `/users/${activePage.id}`),
+  computed(() => `/users/${route.params.id}`),
   { refetch: true }
 )
   .get()

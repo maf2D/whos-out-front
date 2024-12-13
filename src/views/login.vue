@@ -1,34 +1,38 @@
 <template>
-  <form @submit="submitHandler" class="login-container">
-    <custom-input
-      v-model="email"
-      v-bind="emailProps"
-      name="email"
-      type="email"
-      placeholder="Please enter your email"
-      :class="{ error: errors.email }"
-      :error="errors.email || ''"
-    />
+  <div class="login-container">
+    <form @submit="submitHandler">
+      <custom-input
+        v-model="email"
+        v-bind="emailProps"
+        name="email"
+        type="email"
+        placeholder="Please enter your email"
+        :class="{ error: errors.email }"
+        :error="errors.email || ''"
+      />
 
-    <custom-input
-      v-model="password"
-      v-bind="passwordProps"
-      name="password"
-      type="password"
-      placeholder="Please enter your password"
-      :class="{ error: errors.password }"
-      :error="errors.password || ''"
-    />
+      <custom-input
+        v-model="password"
+        v-bind="passwordProps"
+        name="password"
+        type="password"
+        placeholder="Please enter your password"
+        :class="{ error: errors.password }"
+        :error="errors.password || ''"
+      />
 
-    <custom-button type="submit">Login</custom-button>
-  </form>
+      <custom-button type="submit">Login</custom-button>
+    </form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import * as yup from 'yup';
 import { useForm } from 'vee-validate';
-import { Pages, useStore } from '@/store';
+import { useRouter } from 'vue-router';
 import { useApi } from '@/composables/use-api';
+import { useStore } from '@/store';
+import { Routes } from '@/router';
 
 import CustomInput from '@/lib/input/input.vue';
 import CustomButton from '@/lib/button/button.vue';
@@ -38,8 +42,9 @@ type LoginForm = {
   password: string;
 };
 
+const router = useRouter();
 const api = useApi();
-const { activePageUpdate, userUpdate } = useStore();
+const { userUpdate } = useStore();
 
 const { errors, defineField, handleSubmit } = useForm<LoginForm>({
   initialValues: {
@@ -67,7 +72,7 @@ const submitHandler = handleSubmit(async (values, actions) => {
 
   if (data.value) {
     userUpdate(data.value.data.user);
-    activePageUpdate({ name: Pages.USERS });
+    await router.push({ name: Routes.USERS });
   }
 });
 </script>

@@ -61,16 +61,16 @@ const [startDate, startDateProps] = defineField('startDate');
 const [endDate, endDateProps] = defineField('endDate');
 
 const submitHandler = handleSubmit(async (values, actions) => {
-  const { onFetchResponse, onFetchError } = api('/vacations').post(values);
+  const { data, error } = await api('/vacations').post(values).json();
 
-  onFetchError((error: Error) => {
-    actions.setFieldError('startDate', error.message);
-    actions.setFieldError('endDate', error.message);
-  });
+  if (error.value) {
+    actions.setFieldError('startDate', error.value);
+    actions.setFieldError('endDate', error.value);
+  }
 
-  onFetchResponse(() => {
+  if (data.value) {
     emit('on-submit');
-  });
+  }
 });
 </script>
 

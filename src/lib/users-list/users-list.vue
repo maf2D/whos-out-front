@@ -8,8 +8,9 @@
           :title="`${item.data.firstName} ${item.data.lastName}`"
           subtitle="some"
           :onVacation="item.data.onVacation"
+          :id="item.data.id"
+          :link="getUserLink(item.data.id)"
           :key="item.data.id"
-          @click="$emit('user-click', item.data.id)"
         />
 
         <div ref="lastItemRef" />
@@ -27,6 +28,7 @@ import type { User } from '@/types/api';
 
 import { computed, onUnmounted, ref } from 'vue';
 import { useIntersectionObserver, useVirtualList } from '@vueuse/core';
+import { getRoutePath, Routes } from '@/router';
 
 import UsersListItem from '@/lib/users-list-item/users-list-item.vue';
 import Loader from '@/lib/loader/loader.vue';
@@ -55,6 +57,9 @@ defineEmits<{
   (event: 'user-click', userId: number): void;
 }>();
 
+// disable observer when unmounted
+onUnmounted(() => stop());
+
 // last user in the list
 const lastItemRef = ref<HTMLElement | null>(null);
 const isLastItemIntersected = ref(false);
@@ -78,8 +83,8 @@ const { stop } = useIntersectionObserver(
   }
 );
 
-// disable observer when unmounted
-onUnmounted(() => stop());
+const getUserLink = (id: number) =>
+  getRoutePath(Routes.USER).replace(':id', id.toString());
 
 defineExpose({
   isLastItemIntersected,

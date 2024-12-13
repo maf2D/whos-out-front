@@ -1,29 +1,32 @@
 <template>
-  <div class='users-list-item'>
-    <div class='item-left'>
-      <div class='avatar'>
-        <img :src='img' :alt='title' />
+  <router-link
+    :to="link"
+    class="users-list-item"
+  >
+    <div class="item-left">
+      <div class="avatar">
+        <img :src="img" :alt="title" />
       </div>
 
-      <div class='info'>
+      <div class="info">
         <h2>{{ title }}</h2>
         <p>{{ subtitle }}</p>
       </div>
     </div>
 
-    <div v-if="onVacation" class='item-right'>
+    <div v-if="onVacation" class="item-right">
       <span>
         <icon-plane />
       </span>
     </div>
-  </div>
+  </router-link>
 </template>
 
-<script lang='ts' setup>
-  import IconPlane from '@/lib/icons/plane/plane.vue';
+<script lang="ts" setup>
+import IconPlane from '@/lib/icons/plane/plane.vue';
 
-  withDefaults(defineProps<{
-
+withDefaults(
+  defineProps<{
     // item title
     title: string;
 
@@ -36,17 +39,20 @@
     // item subtitle
     subtitle?: string;
 
-  }>(), {
-
+    // item link
+    link: string;
+  }>(),
+  {
     // default values
     title: '',
     img: '',
     subtitle: '',
     onVacation: false
-  });
+  }
+);
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .users-list-item {
   padding-top: 6px;
   padding-bottom: 6px;
@@ -58,6 +64,7 @@
   height: 44px;
   cursor: pointer;
   border-radius: 6px;
+  text-decoration: none;
 
   &:hover {
     background-color: #f1f5f8;
@@ -77,7 +84,7 @@
 
     img {
       border-radius: 50%;
-      border: 1px solid #D3DFEB;
+      border: 1px solid #d3dfeb;
       width: 100%;
       height: 100%;
     }
@@ -125,8 +132,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #EDF2F7;
+    background-color: #edf2f7;
   }
 }
-
 </style>

@@ -10,8 +10,10 @@
       </div>
 
       <ul class="right-menu">
-        <li v-for="{ cb, name } of menu" @click="cb" :key="name">
-          {{ name }}
+        <li v-for="menuItem of menu" :key="menuItem.title">
+          <router-link :to="menuItem.url">
+            {{ menuItem.title }}
+          </router-link>
         </li>
       </ul>
     </div>
@@ -23,19 +25,16 @@
 </template>
 
 <script lang="ts" setup>
+import type { HeaderMenu } from '@/constants/header-menu';
 import IconLogo from '@/lib/icons/logo/logo.vue';
-
-export type MenuItem = {
-  name: string;
-  cb: () => void;
-};
 
 withDefaults(
   defineProps<{
     title: string;
-    menu: MenuItem[];
+    menu: HeaderMenu[];
   }>(),
   {
+    isLoggedIn: false,
     title: ''
   }
 );
@@ -84,10 +83,14 @@ withDefaults(
     align-items: center;
 
     li {
+      margin-left: 20px;
+    }
+
+    a {
       font-size: 14px;
       font-weight: 500;
+      color: #000000;
       cursor: pointer;
-      margin-left: 20px;
       text-decoration: underline;
 
       &:hover {

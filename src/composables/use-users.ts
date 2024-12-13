@@ -18,7 +18,7 @@ export const useUsers = ({
 
   const api = useApi();
 
-  // composable that fetches new users based on query params
+  // dynamic users fetching
   const { isFetching, error, onFetchResponse, execute } = api<ApiUsersResponse>(
     // dynamic url
     computed(

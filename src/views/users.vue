@@ -14,7 +14,6 @@
     :users="users?.users || []"
     :loading="isFetching"
     :error="error"
-    @user-click="(id: number) => activePageUpdate({ name: Pages.USER, id })"
     @set-skip="(skip: number) => widgetState.skip = skip"
     ref="usersListRef"
   />
@@ -24,7 +23,6 @@
 import type { Tab } from '@/lib/tabs-list/tabs-list.vue';
 
 import { computed, reactive, ref, toRefs, watch } from 'vue';
-import { Pages, useStore } from '@/store';
 import { useUsers } from '@/composables/use-users';
 
 import Search from '@/lib/search/search.vue';
@@ -49,8 +47,6 @@ const widgetState = reactive<WidgetState>({
 const usersListRef = ref<InstanceType<typeof UsersList> | null>(null);
 const searchRef = ref<InstanceType<typeof Search> | null>(null);
 
-const { activePageUpdate } = useStore();
-
 // up-to-date users
 const { users, allFetched, isFetching, error, fetchUsers } = useUsers(
   toRefs(widgetState)
@@ -60,7 +56,6 @@ const { users, allFetched, isFetching, error, fetchUsers } = useUsers(
 const tabs = computed<Tab[]>(() => [
   { label: 'All', badge: users.value?.usersCount },
   { label: 'On Vacation', badge: users.value?.usersOnVacationCount }
-  // { label: 'On Holidays', badge: users.value?.usersOnHolidays }
 ]);
 
 // watcher that resets the widget when tab or search was changed
